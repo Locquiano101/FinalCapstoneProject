@@ -54,11 +54,11 @@ function OrganzationComponent() {
 }
 function EventCalendarComponent() {
   return (
-    <div className="text-center min-h-screen bg-violet-100 p-8">
-      <h2 className="text-3xl font-bold text-purple-800 mb-4">
+    <div className="text-center min-h-screen bg-amber-100 p-8">
+      <h2 className="text-3xl font-bold text-amber-800 mb-4">
         Latest Posts & Updates
       </h2>
-      <p className="text-base text-purple-600">
+      <p className="text-base text-amber-600">
         Stay updated with the latest news and announcements.
       </p>
     </div>
