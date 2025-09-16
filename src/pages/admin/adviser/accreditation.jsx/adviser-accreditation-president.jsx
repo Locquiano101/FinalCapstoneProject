@@ -275,142 +275,148 @@ const CurrentPresidentCard = ({ currentPresident, orgData }) => {
     }
   };
   return (
-    <div className="bg-white shadow-xl relative">
+    <div className="bg-white shadow-2xl rounded-xl overflow-hidden">
       {/* Header Section */}
-      <div className="">
-        <div className="relative p-6 bg-white ">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* Profile Image */}
-            <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-white flex items-center justify-center bg-gray-100">
-              {profilePictureUrl ? (
-                <img
-                  src={profilePictureUrl}
-                  alt="President"
-                  className="w-full h-full object-cover"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
-                />
-              ) : (
-                <div className="w-20 h-20 text-gray-500 flex items-center justify-center">
-                  <span>No Img</span>
-                </div>
-              )}
-            </div>
-
-            {/* Basic Info */}
-            <div className="text-center md:text-left">
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">{name}</h1>
-              <p className="text-lg mb-1">{course}</p>
-              <p className="text-lg mb-1">
-                {year} • {department}
-              </p>
-              <p>Status: {overAllStatus}</p>
-            </div>
-          </div>
-
-          {/* More Options Dropdown */}
-          <div className="absolute top-4 right-4">
-            <button
-              onClick={() => setShowDropdown((prev) => !prev)}
-              className="p-2 rounded-full hover:bg-gray-100"
-            >
-              <MoreHorizontal />
-            </button>
-
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-10">
-                <button
-                  onClick={() => {
-                    setShowRevisionModal(true);
-                    setShowDropdown(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  View Revision
-                </button>
-                <button
-                  onClick={() => {
-                    setShowApproveModal(true);
-                    setShowDropdown(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Approve
-                </button>
-              </div>
+      <div className="relative bg-gray-500 text-white p-6">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          {/* Profile Image */}
+          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-white shadow-md bg-gray-100 flex items-center justify-center">
+            {profilePictureUrl ? (
+              <img
+                src={profilePictureUrl}
+                alt="President"
+                className="w-full h-full object-cover"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+            ) : (
+              <span className="text-gray-400 text-sm">No Img</span>
             )}
           </div>
 
-          {/* Revision Modal */}
-          {showRevisionModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-20">
-              <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-                <h2 className="text-xl font-bold mb-2">Send for Revision</h2>
-                <textarea
-                  value={revisionNotes}
-                  onChange={(e) => setRevisionNotes(e.target.value)}
-                  placeholder="Enter revision notes..."
-                  className="w-full p-2 border rounded-lg mb-4"
-                />
+          {/* Basic Info */}
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-bold">{name}</h1>
+            <p className="text-lg opacity-90">{course}</p>
+            <p className="text-lg opacity-90">
+              {year} • {department}
+            </p>
+            <span
+              className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium ${
+                overAllStatus === "Approved by the Adviser"
+                  ? "bg-green-100 text-green-700"
+                  : overAllStatus === "Revision from the Adviser"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              Status: {overAllStatus}
+            </span>
+          </div>
+        </div>
 
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setShowRevisionModal(false)}
-                    className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() =>
-                      submitUpdate({ status: "Revision from the Adviser" })
-                    }
-                    className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
-                  >
-                    Send Revision
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* More Options Dropdown */}
+        <div className="absolute top-4 right-4">
+          <button
+            onClick={() => setShowDropdown((prev) => !prev)}
+            className="p-2 rounded-full hover:bg-white/20"
+          >
+            <MoreHorizontal />
+          </button>
 
-          {/* Approve Modal */}
-          {showApproveModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-20">
-              <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-                <h2 className="text-xl font-bold mb-2">Approve Proposal</h2>
-                <p className="text-gray-600 mb-4">
-                  Are you sure you want to approve this proposal?
-                </p>
-
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setShowApproveModal(false)}
-                    className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() =>
-                      submitUpdate({ status: "Approved by the Adviser" })
-                    }
-                    className="px-4 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600"
-                  >
-                    Approve
-                  </button>
-                </div>
-              </div>
+          {showDropdown && (
+            <div className="absolute right-0 mt-2 w-44 bg-white text-gray-800 border rounded-lg shadow-lg z-10">
+              <button
+                onClick={() => {
+                  setShowRevisionModal(true);
+                  setShowDropdown(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                View Revision
+              </button>
+              <button
+                onClick={() => {
+                  setShowApproveModal(true);
+                  setShowDropdown(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Approve
+              </button>
             </div>
           )}
         </div>
       </div>
 
+      {/* Revision Modal */}
+      {showRevisionModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-20">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-2">Send for Revision</h2>
+            <textarea
+              value={revisionNotes}
+              onChange={(e) => setRevisionNotes(e.target.value)}
+              placeholder="Enter revision notes..."
+              className="w-full p-2 border rounded-lg mb-4"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowRevisionModal(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() =>
+                  submitUpdate({ status: "Revision from the Adviser" })
+                }
+                className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Send Revision
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Approve Modal */}
+      {showApproveModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-20">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-2">Approve Proposal</h2>
+            <p className="text-gray-600 mb-4">
+              Are you sure you want to approve this proposal?
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowApproveModal(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() =>
+                  submitUpdate({ status: "Approved by the Adviser" })
+                }
+                className="px-4 py-2 rounded-lg bg-amber-500 text-white hover:bg-amber-600"
+              >
+                Approve
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Content Grid */}
       <div className="p-6 grid md:grid-cols-2 gap-6">
         {/* Personal Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+        <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Personal Information
           </h3>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Age:</span>
               <span className="font-medium">{age}</span>
@@ -435,11 +441,11 @@ const CurrentPresidentCard = ({ currentPresident, orgData }) => {
         </div>
 
         {/* Additional Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
+        <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Additional Information
           </h3>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Parent/Guardian:</span>
               <span className="font-medium">{parentGuardian}</span>
@@ -468,24 +474,24 @@ const CurrentPresidentCard = ({ currentPresident, orgData }) => {
       {/* Address Section */}
       {presentAddress?.fullAddress && (
         <div className="px-6 pb-4">
-          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">
-            Address
-          </h3>
-          <p className="text-sm text-gray-700">{presentAddress.fullAddress}</p>
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">Address</h3>
+          <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg shadow-sm">
+            {presentAddress.fullAddress}
+          </p>
         </div>
       )}
 
       {/* Skills Section */}
       {talentSkills.length > 0 && (
         <div className="px-6 pb-4">
-          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Skills & Talents
           </h3>
           <div className="flex flex-wrap gap-2">
             {talentSkills.map((talent, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full shadow-sm"
               >
                 {talent.skill} ({talent.level})
               </span>
@@ -497,33 +503,39 @@ const CurrentPresidentCard = ({ currentPresident, orgData }) => {
       {/* Class Schedule */}
       {classSchedule.length > 0 && (
         <div className="px-6 pb-6">
-          <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Class Schedule
           </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full border border-gray-300 text-sm">
-              <thead className="bg-gray-200 text-gray-700">
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="w-full text-sm border-collapse">
+              <thead className="bg-gradient-to-r from-blue-100 to-blue-200 text-gray-800">
                 <tr>
-                  <th className="p-2 border text-left">Subject</th>
-                  <th className="p-2 border text-left">Place</th>
-                  <th className="p-2 border text-left">Day</th>
-                  <th className="p-2 border text-left">Class Start</th>
-                  <th className="p-2 border text-left">Class End</th>
+                  <th className="px-4 py-3 text-left">Subject</th>
+                  <th className="px-4 py-3 text-left">Place</th>
+                  <th className="px-4 py-3 text-left">Day</th>
+                  <th className="px-4 py-3 text-left">Class Start</th>
+                  <th className="px-4 py-3 text-left">Class End</th>
                 </tr>
               </thead>
               <tbody>
                 {classSchedule.map((schedule, index) => (
                   <tr
                     key={schedule._id || index}
-                    className="even:bg-white odd:bg-gray-50"
+                    className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition-colors"
                   >
-                    <td className="p-2 border">{schedule.subject || "N/A"}</td>
-                    <td className="p-2 border">{schedule.place || "N/A"}</td>
-                    <td className="p-2 border">{schedule.day || "N/A"}</td>
-                    <td className="p-2 border">
+                    <td className="px-4 py-2 border-t">
+                      {schedule.subject || "N/A"}
+                    </td>
+                    <td className="px-4 py-2 border-t">
+                      {schedule.place || "N/A"}
+                    </td>
+                    <td className="px-4 py-2 border-t">
+                      {schedule.day || "N/A"}
+                    </td>
+                    <td className="px-4 py-2 border-t">
                       {schedule.time?.start || "N/A"}
                     </td>
-                    <td className="p-2 border">
+                    <td className="px-4 py-2 border-t">
                       {schedule.time?.end || "N/A"}
                     </td>
                   </tr>
@@ -536,7 +548,6 @@ const CurrentPresidentCard = ({ currentPresident, orgData }) => {
     </div>
   );
 };
-
 const PresidentCard = ({
   president,
   onEdit,

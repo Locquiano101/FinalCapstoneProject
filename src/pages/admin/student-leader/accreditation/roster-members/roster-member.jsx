@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AddRosterForm from "./add-roster-member";
 import { API_ROUTER, DOCU_API_ROUTER } from "../../../../../App";
 import axios from "axios";
-import { MoreHorizontal, X } from "lucide-react";
+import { MoreHorizontal, X, Search } from "lucide-react";
 
 export default function StudentLeaderRosters({ orgData }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -10,6 +10,8 @@ export default function StudentLeaderRosters({ orgData }) {
   const [rosterData, setRosterData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState(""); // 🔍 search state
 
   const fetchRosterMembers = async () => {
     try {
@@ -86,6 +88,18 @@ export default function StudentLeaderRosters({ orgData }) {
 
   const rosterMembers = rosterData?.rosterMembers || [];
 
+  // 🔍 Filter members based on search query
+  const filteredMembers = rosterMembers.filter((member) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      member.name?.toLowerCase().includes(query) ||
+      member.email?.toLowerCase().includes(query) ||
+      member.position?.toLowerCase().includes(query) ||
+      member.contactNumber?.toLowerCase().includes(query) ||
+      member.address?.toLowerCase().includes(query)
+    );
+  });
+
   const dropdownItems = [
     {
       id: "add",
@@ -107,8 +121,8 @@ export default function StudentLeaderRosters({ orgData }) {
   return (
     <div className="p-4 flex flex-col bg-gray-cnsc- min-h-screen">
       {/* Outer Container for Roster Management */}
-      <div className=" rounded-l-xl shadow-md p-6 bg-gray-500 ">
-        <div className="flex w-full justify-between items-center  ">
+      <div className="rounded-l-xl shadow-md p-6 bg-gray-500">
+        <div className="flex w-full justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               Roster Management
@@ -149,8 +163,19 @@ export default function StudentLeaderRosters({ orgData }) {
           </div>
         </div>
 
-        {/* Future Content Goes Here */}
-        <div>{/* You can add roster table, members list, etc. */}</div>
+        {/* 🔍 Search Bar */}
+        {rosterMembers.length > 0 && (
+          <div className="mt-4 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-300">
+            <Search className="text-gray-500 mr-2" size={20} />
+            <input
+              type="text"
+              placeholder="Search members..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full outline-none text-gray-700"
+            />
+          </div>
+        )}
       </div>
 
       {!rosterData || rosterMembers.length === 0 ? (
@@ -169,13 +194,19 @@ export default function StudentLeaderRosters({ orgData }) {
         </div>
       ) : (
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6 overflow-auto">
-          {rosterMembers.map((member) => (
-            <RosterMemberCard
-              key={member._id}
-              member={member}
-              orgId={orgData._id}
-            />
-          ))}
+          {filteredMembers.length > 0 ? (
+            filteredMembers.map((member) => (
+              <RosterMemberCard
+                key={member._id}
+                member={member}
+                orgId={orgData._id}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 col-span-full text-center">
+              No members match your search.
+            </p>
+          )}
         </div>
       )}
 
@@ -195,7 +226,7 @@ export default function StudentLeaderRosters({ orgData }) {
           rosterId={rosterData.roster._id}
           onFinish={() => setActiveModal(null)}
           onClose={() => setActiveModal(null)}
-        /> // closes when user cancels />
+        /> // closes when user cancels
       )}
 
       {activeModal === "export" && (
@@ -280,6 +311,7 @@ const RosterMemberCard = ({ member, orgId }) => {
           Name: {member.name}
         </h3>
         <p className="text-sm font-medium text-indigo-600">{member.position}</p>
+
         <p className="text-sm text-gray-600">{member.email}</p>
         <p className="text-sm text-gray-600">{member.contactNumber}</p>
         <p className="text-sm text-gray-500">{member.address}</p>

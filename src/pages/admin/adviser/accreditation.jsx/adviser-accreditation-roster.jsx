@@ -297,7 +297,7 @@ export function AdviserRosterData({ orgData }) {
         </div>
       </div>
       {/* Content */}
-      <div className="h-full">
+      <div className="h-full overflow-auto">
         {!rosterData || rosterMembers.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center border border-dashed border-gray-300 rounded-lg bg-white">
             <p className="text-gray-500 mb-2">
@@ -315,7 +315,7 @@ export function AdviserRosterData({ orgData }) {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 ">
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6 overflow-auto">
             {rosterMembers.map((member) => (
               <RosterMemberCard
                 key={member._id}
